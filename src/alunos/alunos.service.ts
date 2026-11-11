@@ -14,9 +14,26 @@ export class AlunosService {
         return createdAluno.save(); //!POST
     }
 
-    async findAll(): Promise<Aluno[]>{
-        return this.alunoModel.find().exec();
-    } //!GET
+    // async findAll(): Promise<Aluno[]>{
+    //     return this.alunoModel.find().exec();
+    // } //!GET
+    //! MÉTODO PARA BUSCAR ALUNOS COM PAGINAÇÃO
+    async findPage(page: number, limit: number){
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            this.alunoModel.find().skip(skip).limit(limit).exec(),
+            this.alunoModel.countDocuments().exec(),
+        ]);
+        return {
+            data,
+            meta:{
+                total,
+                page,
+                limit,
+                totalPages: Math.ceil(total / limit),
+            },
+        };
+    }
 
     async findOne(id:string):Promise< Aluno >{
         const aluno = await this.alunoModel.findById(id).exec();
