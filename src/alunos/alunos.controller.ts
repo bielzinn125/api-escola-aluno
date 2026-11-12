@@ -67,16 +67,40 @@ export class AlunosController {
         description: 'Número da página  (padrão: 1)',
     })
     @ApiQuery({
-        name: 'limit ',
+        name: 'limit',
         required: false,
         type: Number,
         description: 'Número de itens por pagina página  (padrão: 10)',
     })
+
+
+    @ApiQuery
+   ( {
+        name:'nome',
+        required: false,
+        type: String,
+        description:'Filtrar alunos pelo nome (Ex: Jamilly),'
+    })
+
+@ApiQuery
+   ( {
+        name:'curso',
+        required: false,
+        type: String,
+        description:'Filtrar alunos pelo curso (Ex: Engenharia civil),'
+    })
+
+
+
      findPage(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+        @Query('nome')nome?: string,
+        @Query('curso') curso?: string,
+
+
     ){
-        return this.alunoService.findPage(page, limit);
+        return this.alunoService.findPage(page, limit,nome,curso);
      }
 
 
